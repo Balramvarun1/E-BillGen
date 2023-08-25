@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 public class Login extends JFrame implements ActionListener{
     JButton login, cancel, signup;
@@ -88,32 +90,37 @@ public class Login extends JFrame implements ActionListener{
             String susername = username.getText();
             String spassword = password.getText();
             String user = logginin.getSelectedItem();
-            
+
             try {
                 Conn c = new Conn();
-                String query = "select * from login where username = '"+susername+"' and password = '"+spassword+"' and user = '"+user+"'";
-                
+                String query = "select * from login where username = '"+susername+"' and user = '"+user+"'";
                 ResultSet rs = c.s.executeQuery(query);
-                
+
                 if (rs.next()) {
-                    String meter = rs.getString("meter_no");
-                    setVisible(false);
-                    new Home(user, meter);
+                    String storedHashedPassword = rs.getString("password");
+                    if (BCrypt.checkpw(spassword, storedHashedPassword)) {
+                        String meter = rs.getString("meter_no");
+                        setVisible(false);
+                        new Home(user, meter);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid Login");
+                        username.setText("");
+                        password.setText("");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Login");
                     username.setText("");
                     password.setText("");
                 }
-                
-            } 
-            catch (Exception e) {
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (ae.getSource() == cancel) {
             setVisible(false);
         } else if (ae.getSource() == signup) {
             setVisible(false);
-            
+
             new Signup();
         }
     }

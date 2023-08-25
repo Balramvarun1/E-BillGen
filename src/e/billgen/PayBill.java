@@ -152,7 +152,7 @@ public class PayBill extends JFrame implements ActionListener{
                 e.printStackTrace();
             }
             setVisible(false);
-            new Paytm(meter);
+            
         } else {
             setVisible(false);
         }

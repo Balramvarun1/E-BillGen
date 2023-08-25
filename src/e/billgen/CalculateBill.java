@@ -142,21 +142,25 @@ public class CalculateBill extends JFrame implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == next) {
-            String meter = meternumber.getSelectedItem();
-            String units = tfunits.getText();
-            String month = cmonth.getSelectedItem();
-            
+    if (ae.getSource() == next) {
+        String meter = meternumber.getSelectedItem();
+        String units = tfunits.getText();
+        String month = cmonth.getSelectedItem();
+
+        // Check if a bill for the same meter and month already exists
+        if (billExists(meter, month)) {
+            JOptionPane.showMessageDialog(null, "A bill for this meter and month already exists. Cannot calculate again.");
+        } else {
             int totalbill = 0;
             int unit_consumed = Integer.parseInt(units);
 
             String query = "select * from tax";
-            
+
             try {
                 Conn c = new Conn();
                 ResultSet rs = c.s.executeQuery(query);
-                
-                while(rs.next()) {
+
+                while (rs.next()) {
                     totalbill += unit_consumed * Integer.parseInt(rs.getString("cost_per_unit"));
                     totalbill += Integer.parseInt(rs.getString("meter_rent"));
                     totalbill += Integer.parseInt(rs.getString("service_charge"));
@@ -167,24 +171,36 @@ public class CalculateBill extends JFrame implements ActionListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            String query2 = "insert into bill values('"+meter+"', '"+month+"', '"+units+"', '"+totalbill+"', 'Not Paid')";
-        
+
+            String query2 = "insert into bill values('" + meter + "', '" + month + "', '" + units + "', '" + totalbill + "', 'Not Paid')";
+
             try {
-                Conn c  =  new Conn();
+                Conn c = new Conn();
                 c.s.executeUpdate(query2);
-                
-                JOptionPane.showMessageDialog(null, "Updated Successfully");
+
+                JOptionPane.showMessageDialog(null, "Bill calculated and updated successfully.");
                 setVisible(false);
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } 
-        else {
-            setVisible(false);
         }
+    } else {
+        setVisible(false);
     }
+}
+
+// Helper method to check if a bill for the same meter and month already exists
+private boolean billExists(String meter, String month) {
+    try {
+        Conn c = new Conn();
+        String query = "select * from bill where meter_no = '" + meter + "' and month = '" + month + "'";
+        ResultSet rs = c.s.executeQuery(query);
+        return rs.next(); // If there's a result, a bill already exists
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false; // Handle any exceptions gracefully
+    }
+}
     
     public static void main(String[] args) {
         new CalculateBill();

@@ -7,7 +7,9 @@ import java.awt.event.*;
 import java.sql.*;
 
 
-public class Signup extends JFrame implements ActionListener{
+public class Signup extends JFrame implements ActionListener {
+    // ... Existing code for UI components ...
+
     JButton create,back;
     Choice accountType;
     JTextField meter, username, name, password;
@@ -72,7 +74,6 @@ public class Signup extends JFrame implements ActionListener{
         panel.add(name);
         
         meter.addFocusListener(new FocusListener() {
-            
             @Override
             public void focusGained(FocusEvent fe) {}
             
@@ -142,39 +143,55 @@ public class Signup extends JFrame implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == create) {
-            String atype = accountType.getSelectedItem();
-            String susername = username.getText();
-            String sname = name.getText();
-            String spassword = password.getText();
-            String smeter = meter.getText();
-           
-            try {
-                Conn c = new Conn();
-                
-                String query = null;
-                if (atype.equals("Admin")) {
-                    query = "insert into login values('"+smeter+"', '"+susername+"', '"+sname+"', '"+spassword+"', '"+atype+"')";
-                } 
-                else {
-                    query = "update login set username = '"+susername+"', password = '"+spassword+"', user = '"+atype+"' where meter_no = '"+smeter+"'";
-                }
-                c.s.executeUpdate(query);
-                JOptionPane.showMessageDialog(null, "Successfull Created");
-                setVisible(false);
-                new Login();
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
+    if (ae.getSource() == create) {
+        String atype = accountType.getSelectedItem();
+        String susername = username.getText();
+        String sname = name.getText();
+        String spassword = password.getText();
+        String smeter = meter.getText();
+
+        try {
+            Conn c = new Conn();
+
+            // Check if the username already exists
+            ResultSet usernameCheck = c.s.executeQuery("SELECT username FROM login WHERE username = '" + susername + "'");
+            if (usernameCheck.next()) {
+                JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.");
+                return; // Don't proceed further
             }
-        }
-        else if(ae.getSource()== back){
+
+            // Check if the username is empty
+            if (susername.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Username cannot be empty.");
+                return; // Don't proceed further
+            }
+
+            // Continue with account creation
+            String hashedPassword = Conn.hashPassword(spassword);
+
+            String query = null;
+            if (atype.equals("Admin")) {
+                query = "INSERT INTO login VALUES('"+smeter+"', '"+susername+"', '"+sname+"', '"+hashedPassword+"', '"+atype+"')";
+            } else {
+                query = "UPDATE login SET username = '"+susername+"', password = '"+hashedPassword+"', user = '"+atype+"' WHERE meter_no = '"+smeter+"'";
+            }
+            c.s.executeUpdate(query);
+
+            JOptionPane.showMessageDialog(null, "Account Created Successfully");
+
             setVisible(false);
+            new Login();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    } else if (ae.getSource() == back) {
+        setVisible(false);
+
+        new Login();
     }
+}
 
     public static void main(String[] args) {
         new Signup();
     }
-
 }

@@ -6,7 +6,8 @@ import java.sql.*;
 import net.proteanit.sql.DbUtils;
 
 public class BillDetails extends JFrame{
-     BillDetails(String meter) {
+
+    BillDetails(String meter) {
         
         setSize(700, 650);
         setLocation(400, 150);
@@ -31,7 +32,9 @@ public class BillDetails extends JFrame{
         
         setVisible(true);
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         new BillDetails("");
     }
 }
+
