@@ -45,7 +45,7 @@ public class ViewInformation extends JFrame implements ActionListener{
         
         JLabel address = new JLabel("");
         address.setFont(new Font("MV Boli", Font.BOLD, 20));
-        address.setBounds(250, 200, 100, 20);
+        address.setBounds(250, 200, 200, 20);
         add(address);
         
         JLabel lblcity = new JLabel("City");

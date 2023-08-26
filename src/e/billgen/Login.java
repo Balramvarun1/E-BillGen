@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.sql.*;
 import org.mindrot.jbcrypt.BCrypt;
 
-
 public class Login extends JFrame implements ActionListener{
     JButton login, cancel, signup;
     JTextField username, password;

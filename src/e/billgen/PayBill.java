@@ -5,7 +5,9 @@ import java.awt.*;
 import java.sql.*;
 import java.awt.event.*;
 
+
 public class PayBill extends JFrame implements ActionListener{
+    JLabel labelunits,labeltotalbill,labelstatus;
     Choice cmonth;
     JButton pay, back;
     String meter;
@@ -59,7 +61,7 @@ public class PayBill extends JFrame implements ActionListener{
         lblunits.setBounds(35, 260, 200, 20);
         add(lblunits);
         
-        JLabel labelunits = new JLabel("");
+        labelunits = new JLabel("");
         labelunits.setBounds(300, 260, 200, 20);
         add(labelunits);
         
@@ -67,7 +69,7 @@ public class PayBill extends JFrame implements ActionListener{
         lbltotalbill.setBounds(35, 320, 200, 20);
         add(lbltotalbill);
         
-        JLabel labeltotalbill = new JLabel("");
+        labeltotalbill = new JLabel("");
         labeltotalbill.setBounds(300, 320, 200, 20);
         add(labeltotalbill);
         
@@ -75,7 +77,7 @@ public class PayBill extends JFrame implements ActionListener{
         lblstatus.setBounds(35, 380, 200, 20);
         add(lblstatus);
         
-        JLabel labelstatus = new JLabel("");
+        labelstatus = new JLabel("");
         labelstatus.setBounds(300, 380, 200, 20);
         labelstatus.setForeground(Color.RED);
         add(labelstatus);
@@ -94,6 +96,7 @@ public class PayBill extends JFrame implements ActionListener{
                 labeltotalbill.setText(rs.getString("totalbill"));
                 labelstatus.setText(rs.getString("status"));
             }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,10 +107,17 @@ public class PayBill extends JFrame implements ActionListener{
                 try {
                     Conn c = new Conn();
                     ResultSet rs = c.s.executeQuery("select * from bill where meter_no = '"+meter+"' AND month = '"+cmonth.getSelectedItem()+"'");
-                    while(rs.next()) {
+                    if (rs.next()) {
+                // Data is present in the database for the selected month
                         labelunits.setText(rs.getString("units"));
                         labeltotalbill.setText(rs.getString("totalbill"));
                         labelstatus.setText(rs.getString("status"));
+                    }
+                    else {
+                // Data is not present, set the values to blank or zero
+                        labelunits.setText("");
+                        labeltotalbill.setText("");
+                        labelstatus.setText("");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -115,18 +125,17 @@ public class PayBill extends JFrame implements ActionListener{
             }
         });
         
-        
         pay = new JButton("Pay");
         pay.setBackground(Color.BLACK);
         pay.setForeground(Color.WHITE);
-        pay.setBounds(100, 460, 100, 25);
+        pay.setBounds(230, 460, 100, 25);
         pay.addActionListener(this);
         add(pay);
         
         back = new JButton("Back");
         back.setBackground(Color.BLACK);
         back.setForeground(Color.WHITE);
-        back.setBounds(230, 460, 100, 25);
+        back.setBounds(350, 460, 100, 25);
         back.addActionListener(this);
         add(back);
         
@@ -153,7 +162,9 @@ public class PayBill extends JFrame implements ActionListener{
             }
             setVisible(false);
             
-        } else {
+        }
+        
+        else {
             setVisible(false);
         }
     }
