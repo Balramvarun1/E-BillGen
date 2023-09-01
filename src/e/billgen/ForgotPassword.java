@@ -20,8 +20,8 @@ public class ForgotPassword extends JFrame implements ActionListener {
     private String randomOTP = "";
 
     // Replace [YourAccountSID] and [YourAuthToken] with your actual credentials
-    public static final String TWILIO_ACCOUNT_SID = "AC7fd51b501832a5beeebc619b7c3b6279";
-    public static final String TWILIO_AUTH_TOKEN = "01b52e00f6cc3e557bc423bd9ce0358b";
+    public static final String TWILIO_ACCOUNT_SID = "";
+    public static final String TWILIO_AUTH_TOKEN = "";
 
     public ForgotPassword() {
         super("Forgot Password Page");
