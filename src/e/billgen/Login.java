@@ -5,10 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import org.mindrot.jbcrypt.BCrypt;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 
 public class Login extends JFrame implements ActionListener{
     JButton login, cancel, signup;
-    JTextField username, password;
+    JTextField username;
+    JPasswordField password;
     Choice logginin;
     Login() {
         super("Login Page");
@@ -29,7 +33,7 @@ public class Login extends JFrame implements ActionListener{
         lblpassword.setBounds(350, 160, 100, 20);
         add(lblpassword);
         
-        password = new JTextField();
+        password = new JPasswordField();
         password.setBounds(450, 160, 150, 20);
         add(password);
         
@@ -70,6 +74,21 @@ public class Login extends JFrame implements ActionListener{
         signup.setBounds(550, 260, 100, 40);
         signup.addActionListener(this);
         add(signup);
+        
+        JLabel forgotpassword = new JLabel("<html><u>Forgot Password</u></html>");
+        forgotpassword.setBounds(450, 400, 300, 40);
+        forgotpassword.setFont(new Font("Arial", Font.PLAIN, 14));
+        forgotpassword.addMouseListener(new MouseAdapter() {
+        @Override
+            public void mouseClicked(MouseEvent e) {
+            // Open the ForgotPasswordPage here
+            // For example:
+                
+                new ForgotPassword();
+                setVisible(false);// Create the ForgotPasswordPage class to handle the page
+            }
+        });
+        add(forgotpassword);
         
         ImageIcon i7 = new ImageIcon(ClassLoader.getSystemResource("images/secondd.png"));
         Image i8 = i7.getImage().getScaledInstance(150, 150, Image.SCALE_DEFAULT);
@@ -122,6 +141,7 @@ public class Login extends JFrame implements ActionListener{
 
             new Signup();
         }
+          
     }
     
     public static void main(String[] args) {
