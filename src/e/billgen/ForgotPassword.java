@@ -91,18 +91,19 @@ public class ForgotPassword extends JFrame implements ActionListener {
     }
 
     // Implement actionPerformed to handle button clicks
+ 
     @Override
     public void actionPerformed(ActionEvent e) {
          String meter = userIdTextField.getText();
          String phoneNo = phoneNoTextField.getText();
-         randomOTP = generateRandomOTP();
+         
         if (e.getSource() == sendOtpButton) {
            
             // Use the Conn class to check if the user exists in the database
             boolean isValidUser = isValidUser(meter, phoneNo);
 
             if (isValidUser) {
-
+                randomOTP = generateRandomOTP();
                 // Send OTP to user's phone using the sendSms method
                 boolean otpSent = sendSms(phoneNo, randomOTP);
 
@@ -125,8 +126,13 @@ public class ForgotPassword extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Phone No cannot be empty.");
                 return; // Don't proceed further
             }
+    
+            String enteredOTP = otpTextField.getText().trim();
             
-            String enteredOTP = otpTextField.getText();
+            if (enteredOTP.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please Enter OTP.");
+                return; // Don't proceed further
+            }
             //System.out.println(enteredOTP);
             // TODO: Compare enteredOTP with the sent OTP
             if (enteredOTP.equals(randomOTP)) {
@@ -171,7 +177,7 @@ public class ForgotPassword extends JFrame implements ActionListener {
             Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN); // Initialize Twilio here
 
             Message message = Message.creator(
-                    new PhoneNumber("+91" + phoneNumber),   // Recipient's phone number
+                    new PhoneNumber("+91 " + phoneNumber),   // Recipient's phone number
                     new PhoneNumber("+12053156575"),  // Your Twilio phone number
                     "Your OTP is: " + otp)  // Message body with OTP
                     .create();

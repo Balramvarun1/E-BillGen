@@ -83,6 +83,7 @@ public class ResetPassword extends JFrame implements ActionListener {
                 // Display a success message or perform any other actions as needed
                 JOptionPane.showMessageDialog(this, "Password changed successfully!");
                 setVisible(false);
+                new Login();
             } else {
                 JOptionPane.showMessageDialog(this, "Passwords do not match. Please try again.");
             }

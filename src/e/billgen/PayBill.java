@@ -128,7 +128,7 @@ public class PayBill extends JFrame implements ActionListener{
         pay = new JButton("Pay");
         pay.setBackground(Color.BLACK);
         pay.setForeground(Color.WHITE);
-        pay.setBounds(230, 460, 100, 25);
+        pay.setBounds(170, 460, 100, 25);
         pay.addActionListener(this);
         add(pay);
         
